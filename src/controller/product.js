@@ -36,7 +36,7 @@ module.exports = {
             }
             const result = await postProduct(setData)
             return helper.response(response, 201, "Product Created", result)
-        } catch {
+        } catch (error) {
             return helper.response(response, 400, "Bad Request", error)
         }
     },

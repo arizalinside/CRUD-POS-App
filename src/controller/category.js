@@ -47,7 +47,7 @@ module.exports = {
                 const result = await patchCategory(setData, id)
                 return helper.response(response, 201, 'Category Updated', result)
             } else {
-                return helper.response(response, 404, `Category By Id : ${id} Not Found`)
+                return helper.response(response, 404, `Category By Id : ${id} Not Found`, error)
             }
         } catch (error) {
             return helper.response(response, 400, 'Bad Request', error)
