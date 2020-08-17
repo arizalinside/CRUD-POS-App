@@ -3,8 +3,15 @@ const connection = require('../config/mysql')
 module.exports = {
     getAllHistory: () => {
         return new Promise((resolve, reject) => {
-            connection.query(`SELECT * FROM history`, (error, result) => {
+            connection.query(`SELECT * FROM history ORDER BY ? ASC LIMIT ? OFFSET ?`, [`${sort}`, limit, offset], (error, result) => {
                 !error ? resolve(result) : reject(new Error(error))
+            })
+        })
+    },
+    getHistoryCount: () => {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT COUNT(*) as total FROM history', (error, result) => {
+                !error ? resolve(result[0].total) : reject(new Error(error))
             })
         })
     },

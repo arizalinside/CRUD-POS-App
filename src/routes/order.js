@@ -8,6 +8,6 @@ router.get('/', getAllOrder)
 router.get('/:id', getOrderById)
 
 // [POST]
-router.post('/:id', postOrder)
+router.post('/', postOrder)
 
 module.exports = router

@@ -1,4 +1,6 @@
-const { getAllOrder, getOrderById, postOrder } = require('../model/order')
+const { getAllOrder, getOrderById, getOrderByHistoryId, postOrder } = require('../model/order')
+const { getHistoryById, postHistory, patchHistory } = require('../model/history')
+const { getProductById } = require('../model/product')
 const helper = require('../helper/index')
 
 module.exports = {
@@ -26,13 +28,50 @@ module.exports = {
     postOrder: async (request, response) => {
         try {
             const setData = {
-                product_id: request.body.product_id,
-                order_qty: request.body.qty
+                history_invoices: Math.floor(100000 + Math.random() * 900000),
+                history_subtotal: 0,
+                history_created_at: new Date()
             }
-            const result = await postOrder(setData)
-            return helper.response(response, 201, 'Order Created', result)
+            const result = await postHistory(setData)
+            const historyId = result.history_id
+            const dataOrder = request.body.orders
+            let subtotal = 0
+            for (let i = 0; i < dataOrder.length; i++) {
+                const productId = dataOrder[i].product_id
+                const orderQty = dataOrder[i].order_qty
+                const getProductId = await getProductById(productId)
+                const dataProduct = getProductId[0]
+                const productPrice = dataProduct.product_harga
+                const setData2 = {
+                    history_id: historyId,
+                    product_id: productId,
+                    order_qty: orderQty,
+                    order_subtotal: orderQty * productPrice
+                }
+                const result2 = await postOrder(setData2)
+                subtotal += result2.order_subtotal
+            }
+            const tax = subtotal * 0.05
+            const totalPrice = subtotal + tax
+            const setData3 = {
+                history_subtotal: totalPrice
+            }
+            await patchHistory(setData3, historyId)
+            const dataHistory = await getHistoryById(historyId)
+            const dataOrderByHistory = await getOrderByHistoryId(historyId)
+            const { history_id, history_invoices, history_subtotal, history_created_at } = dataHistory[0]
+            const checkout = {
+                history_id,
+                history_invoices,
+                orders: dataOrderByHistory,
+                tax,
+                history_subtotal,
+                history_created_at
+            }
+            return helper.response(response, 201, 'Order Created', result, checkout)
         } catch (error) {
-            return helper.response(response, 400, 'Bad Request', error)
+            console.log(error)
+            // return helper.response(response, 400, 'Bad Request', error)
         }
     }
 }
