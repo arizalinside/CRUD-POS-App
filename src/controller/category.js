@@ -13,13 +13,14 @@ module.exports = {
     getCategoryById: async (request, response) => {
         try {
             const { id } = request.params
-            const result = await getCategoryById();
+            const result = await getCategoryById(id);
             if (result.length > 0) {
                 return helper.response(response, 200, 'Success Get Category By ID', result)
             } else {
                 return helper.response(response, 404, `Category By Id : ${id} Not Found`)
             }
         } catch (error) {
+            // console.log(error)
             return helper.response(response, 400, 'Bad Request', error)
         }
     },

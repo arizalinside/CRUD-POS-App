@@ -68,10 +68,10 @@ module.exports = {
                 history_subtotal,
                 history_created_at
             }
-            return helper.response(response, 201, 'Order Created', result, checkout)
+            return helper.response(response, 201, 'Order Created', checkout)
         } catch (error) {
-            console.log(error)
-            // return helper.response(response, 400, 'Bad Request', error)
+            // console.log(error)
+            return helper.response(response, 400, 'Bad Request', error)
         }
     }
 }

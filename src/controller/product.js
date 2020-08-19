@@ -29,23 +29,25 @@ const getNextLink = (page, totalPage, currentQuery) => {
         const resultNextLink = { ...currentQuery, ...generatedPage }
         return qs.stringify(resultNextLink)
     } else {
-
+        return null
     }
 }
 
 module.exports = {
     getProduct: async (request, response) => {
         let { page, limit, sort } = request.query
-        page === undefined ? page = 1 : parseInt(page)
-        limit === undefined ? limit = 3 : parseInt(limit)
-        if (sort === undefined) {
-            sort = 'product_id'
-        }
-        let totalData = await getProductCount()
-        let totalPage = Math.ceil(totalData / limit)
-        let offset = page * limit - limit
-        let prevLink = getPrevLink(page, request.query)
-        let nextLink = getNextLink(page, totalPage, request.query)
+        page = parseInt(page)
+        limit = parseInt(limit)
+        // page === undefined || page === '' ? page = 1 : parseInt(page)
+        // limit === undefined || page === '' ? limit = 3 : parseInt(limit)
+        // if (sort === undefined || sort === '') {
+        //     sort = 'product_id'
+        // }
+        const totalData = await getProductCount()
+        const totalPage = Math.ceil(totalData / limit)
+        const offset = page * limit - limit
+        const prevLink = getPrevLink(page, request.query)
+        const nextLink = getNextLink(page, totalPage, request.query)
         const pageInfo = {
             page,
             totalPage,
@@ -56,7 +58,7 @@ module.exports = {
         }
         try {
             const result = await getProduct(limit, offset, sort);
-            return helper.response(response, 200, "Success Get Product", result, pageInfo)
+            return helper.response(response, 200, 'Success Get Product', result, pageInfo)
         } catch (error) {
             console.log(error)
             // return helper.response(response, 400, "Bad Request", error)
@@ -95,7 +97,6 @@ module.exports = {
         try {
             const { category_id, product_name, product_harga, product_status } = request.body
             const setData = {
-                category_id,
                 product_name,
                 product_harga,
                 product_created_at: new Date(),
@@ -104,7 +105,8 @@ module.exports = {
             const result = await postProduct(setData)
             return helper.response(response, 201, "Product Created", result)
         } catch (error) {
-            return helper.response(response, 400, "Bad Request", error)
+            console.log(error)
+            // return helper.response(response, 400, "Bad Request", error)
         }
     },
     patchProduct: async (request, response) => {
@@ -112,7 +114,6 @@ module.exports = {
             const { id } = request.params
             const { category_id, product_name, product_harga, product_status } = request.body
             const setData = {
-                category_id,
                 product_name,
                 product_harga,
                 product_updated_at: new Date(),

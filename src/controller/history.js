@@ -1,17 +1,44 @@
-const { getAllHistory, getHistoryById, patchHistory } = require('../model/history')
+const { getAllHistory, getHistoryCount, getHistoryById, patchHistory } = require('../model/history')
 const { getOrderByHistoryId } = require('../model/order')
+const qs = require('querystring')
 const helper = require('../helper/index')
+
+const getPrevLink = (page, currentQuery) => {
+    if (page > 1) {
+        const generatedPage = {
+            page: page - 1
+        }
+        const resultPrevLink = { ...currentQuery, ...generatedPage }
+        return qs.stringify(resultPrevLink)
+    } else {
+        return null
+    }
+}
+
+const getNextLink = (page, totalPage, currentQuery) => {
+    if (page < totalPage) {
+        const generatedPage = {
+            page: page + 1
+        }
+        const resultNextLink = { ...currentQuery, ...generatedPage }
+        return qs.stringify(resultNextLink)
+    } else {
+        return null
+    }
+}
 
 module.exports = {
     getAllHistory: async (request, response) => {
         let { page, limit, sort } = request.query
-        page === undefined ? page = 1 : page = parseInt(page)
-        limit === undefined ? limit = 3 : limit = parseInt(limit)
-        if (sort === undefined) {
-            sort = 'history_id'
-        }
+        page = parseInt(page)
+        limit = parseInt(limit)
+        // page === undefined ? page = 1 : page = parseInt(page)
+        // limit === undefined ? limit = 3 : limit = parseInt(limit)
+        // if (sort === undefined) {
+        //     sort = 'history_id'
+        // }
 
-        const totalData = await getProductCount()
+        const totalData = await getHistoryCount()
         const totalPage = Math.ceil(totalData / limit)
         let offset = page * limit - limit
         let prevLink = getPrevLink(page, request.query)
@@ -19,7 +46,7 @@ module.exports = {
 
         const pageInfo = {
             page,
-            totalpage,
+            totalPage,
             limit,
             totalData,
             prevLink: prevLink && `http://127.0.0.1:3001/history?${prevLink}`,
@@ -27,9 +54,10 @@ module.exports = {
         }
         try {
             const result = await getAllHistory(limit, offset, sort);
-            return helper.response(response, 201, 'Success Get History', result)
+            return helper.response(response, 201, 'Success Get History', result, pageInfo)
         } catch (error) {
-            return helper.response(response, 404, 'Bad Request', error)
+            console.log(error)
+            // return helper.response(response, 404, 'Bad Request', error)
         }
     },
     getHistoryById: async (request, response) => {
@@ -37,11 +65,12 @@ module.exports = {
             const { id } = request.params
             const result = await getHistoryById(id);
             if (result.length > 0) {
-                return helper.response(repsonse, 201, 'Success Get History By ID', result)
+                return helper.response(response, 201, 'Success Get History By ID', result)
             } else {
                 return helper.response(response, 404, `History By Id : ${$} Not Found`)
             }
         } catch (error) {
+            // console.log(error)
             return helper.response(response, 404, 'Bad Request', error)
         }
     },

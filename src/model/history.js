@@ -1,9 +1,9 @@
 const connection = require('../config/mysql')
 
 module.exports = {
-    getAllHistory: () => {
+    getAllHistory: (limit, offset, sort) => {
         return new Promise((resolve, reject) => {
-            connection.query(`SELECT * FROM history ORDER BY ? ASC LIMIT ? OFFSET ?`, [`${sort}`, limit, offset], (error, result) => {
+            connection.query(`SELECT * FROM history ORDER BY ${sort} ASC LIMIT ? OFFSET ?`, [limit, offset], (error, result) => {
                 !error ? resolve(result) : reject(new Error(error))
             })
         })
