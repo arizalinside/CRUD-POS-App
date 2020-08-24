@@ -48,7 +48,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       connection.query(
         `
-            SELECT product.product_id, category.category_name, product.product_name, product.product_harga, product.product_created_at, product_updated_at 
+            SELECT product.product_id, category.category_name, product.product_name, product.product_price, product.product_created_at, product_updated_at 
             FROM product 
             INNER JOIN category ON product.category_id = category.category_id 
             WHERE product.product_name LIKE ?`,

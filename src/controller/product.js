@@ -125,15 +125,28 @@ module.exports = {
       const {
         category_id,
         product_name,
-        product_harga,
+        product_price,
         product_status,
       } = request.body;
       const setData = {
+        category_id,
         product_name,
-        product_harga,
+        product_price,
         product_created_at: new Date(),
         product_status,
       };
+      if (category_id === "") {
+        return helper.response(response, 400, "Category ID cannot be empty");
+      }
+      if (product_name === "") {
+        return helper.response(response, 400, "Product name cannot be empty");
+      }
+      if (product_price === "") {
+        return helper.response(response, 400, "Product price cannot be empty");
+      }
+      if (product_status === "") {
+        return helper.response(response, 400, "Product status cannot be empty");
+      }
       const result = await postProduct(setData);
       return helper.response(response, 201, "Product Created", result);
     } catch (error) {
@@ -147,12 +160,13 @@ module.exports = {
       const {
         category_id,
         product_name,
-        product_harga,
+        product_price,
         product_status,
       } = request.body;
       const setData = {
+        category_id,
         product_name,
-        product_harga,
+        product_price,
         product_updated_at: new Date(),
         product_status,
       };
