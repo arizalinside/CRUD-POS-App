@@ -170,6 +170,18 @@ module.exports = {
         product_updated_at: new Date(),
         product_status,
       };
+      if (category_id === "") {
+        return helper.response(response, 400, "Category ID cannot be empty");
+      }
+      if (product_name === "") {
+        return helper.response(response, 400, "Product name cannot be empty");
+      }
+      if (product_price === "") {
+        return helper.response(response, 400, "Product price cannot be empty");
+      }
+      if (product_status === "") {
+        return helper.response(response, 400, "Product status cannot be empty");
+      }
       const checkId = await getProductById(id);
       if (checkId.length > 0) {
         const result = await patchProduct(setData, id);
