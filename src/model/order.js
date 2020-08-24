@@ -3,10 +3,12 @@ const connection = require("../config/mysql");
 module.exports = {
   getAllOrder: () => {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM orders`),
+      connection.query(
+        `SELECT orders.order_id, product.product_name, product.product_price, orders.order_qty, orders.order_subtotal FROM orders JOIN product ON orders.product_id = product.product_id`,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error));
-        };
+        }
+      );
     });
   },
   getOrderCount: () => {
@@ -22,7 +24,7 @@ module.exports = {
   getOrderById: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM orders WHERE order_id = ?`,
+        `SELECT orders.order_id, product.product_name, product.product_price, orders.order_qty, orders.order_subtotal FROM orders JOIN product ON orders.product_id = product.product_id WHERE orders.order_id = ?`,
         id,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error));

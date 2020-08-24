@@ -24,7 +24,7 @@ module.exports = {
   getOrderById: async (request, response) => {
     try {
       const { id } = request.params;
-      const result = await getOrderById();
+      const result = await getOrderById(id);
       if (result.length > 0) {
         return helper.response(
           response,
