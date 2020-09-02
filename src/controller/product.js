@@ -10,6 +10,8 @@ const {
 } = require("../model/product");
 const qs = require("querystring");
 const helper = require("../helper/index");
+const redis = require('redis')
+const client = redis.createClient()
 
 const getPrevLink = (page, currentQuery) => {
   if (page > 1) {
@@ -60,6 +62,8 @@ module.exports = {
     };
     try {
       const result = await getProduct(limit, offset, sort);
+      client.set(`getproduct:${JSON.stringify(request.query)}`, JSON.stringify(result))
+      //proses set data result ke dalam redis
       return helper.response(
         response,
         200,
@@ -81,7 +85,8 @@ module.exports = {
         resultData,
         searchResult,
       };
-      if (result.length > 0) {
+      client.set(`getproductbyname:${keyword}`, JSON.stringify(result))
+      if (searchResult.length > 0) {
         return helper.response(
           response,
           201,
@@ -102,6 +107,7 @@ module.exports = {
       // const id = request.params.id
       const { id } = request.params;
       const result = await getProductById(id);
+      client.setex(`getproductbyid:${id}`, 3600, JSON.stringify(result))
       if (result.length > 0) {
         return helper.response(
           response,
@@ -122,6 +128,7 @@ module.exports = {
   },
   postProduct: async (request, response) => {
     try {
+      console.log(request.file)
       const {
         category_id,
         product_name,
@@ -132,9 +139,11 @@ module.exports = {
         category_id,
         product_name,
         product_price,
+        product_image: request.file === undefined ? "" : request.file.filename,
         product_created_at: new Date(),
         product_status,
       };
+      // console.log(setData)
       if (category_id === "") {
         return helper.response(response, 400, "Category ID cannot be empty");
       }
@@ -161,12 +170,14 @@ module.exports = {
         category_id,
         product_name,
         product_price,
+        product_image,
         product_status,
       } = request.body;
       const setData = {
         category_id,
         product_name,
         product_price,
+        product_image: request.file === undefined ? "" : request.file.filename,
         product_updated_at: new Date(),
         product_status,
       };
@@ -178,6 +189,9 @@ module.exports = {
       }
       if (product_price === "") {
         return helper.response(response, 400, "Product price cannot be empty");
+      }
+      if (product_image === "") {
+        return helper.response(response, 400, "Product image cannot be empty");
       }
       if (product_status === "") {
         return helper.response(response, 400, "Product status cannot be empty");

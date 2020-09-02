@@ -11,11 +11,14 @@ const {
 } = require("../model/history");
 const { getProductById } = require("../model/product");
 const helper = require("../helper/index");
+const redis = require('redis')
+const client = redis.createClient()
 
 module.exports = {
   getAllOrder: async (request, response) => {
     try {
       const result = await getAllOrder();
+      client.set('getallorder', JSON.stringify(result))
       return helper.response(response, 200, "Success Get Order", result);
     } catch (error) {
       return helper.response(response, 400, "Bad Request", error);
@@ -25,6 +28,7 @@ module.exports = {
     try {
       const { id } = request.params;
       const result = await getOrderById(id);
+      client.set(`getorderbyid:${id}`, JSON.stringify(result))
       if (result.length > 0) {
         return helper.response(
           response,
@@ -70,7 +74,7 @@ module.exports = {
         const result2 = await postOrder(setData2);
         subtotal += result2.order_subtotal;
       }
-      const tax = subtotal * 0.05;
+      const tax = subtotal * 0.1;
       const totalPrice = subtotal + tax;
       const setData3 = {
         history_subtotal: totalPrice,
