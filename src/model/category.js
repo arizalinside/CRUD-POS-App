@@ -8,12 +8,47 @@ module.exports = {
             })
         })
     },
+    getCategoryCount: () => {
+        return new Promise((resolve, reject) => {
+            connection.query(
+                `SELECT COUNT(*) as total FROM category`,
+                (error, result) => {
+                    !error ? resolve(result[0].total) : reject(new Error(error));
+                }
+            );
+        });
+    },
+    getCategoryCountByName: (keyword) => {
+        return new Promise((resolve, reject) => {
+            connection.query(
+                `SELECT COUNT(*) as total FROM category WHERE category_name LIKE ?`,
+                `%${keyword}%`,
+                (error, result) => {
+                    !error ? resolve(result[0].total) : reject(new Error(error));
+                }
+            );
+        });
+    },
     getCategoryById: (id) => {
         return new Promise((resolve, reject) => {
             connection.query(`SELECT * FROM category WHERE category_id = ?`, id, (error, result) => {
                 !error ? resolve(result) : reject(new Error(error))
             })
         })
+    },
+    getCategoryByName: (keyword) => {
+        return new Promise((resolve, reject) => {
+            connection.query(
+                `
+                SELECT * 
+                FROM category  
+                WHERE category_name LIKE ?`,
+                `%${keyword}%`,
+                (error, result) => {
+                    !error ? resolve(result) : reject(new Error(error));
+                }
+            );
+        });
     },
     postCategory: (setData) => {
         return new Promise((resolve, reject) => {
