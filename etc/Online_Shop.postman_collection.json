@@ -1,0 +1,851 @@
+{
+	"info": {
+		"_postman_id": "0aadb75a-f750-427e-8d1c-6161e8d261a8",
+		"name": "Online_Shop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PRODUCT",
+			"item": [
+				{
+					"name": "GET_ALL_PRODUCT",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2VtYWlsIjoiYXJpemFsaW5zaWRlQGdtYWlsLmNvbSIsInVzZXJfbmFtZSI6ImFyaXphbCIsInVzZXJfcm9sZSI6MiwidXNlcl9zdGF0dXMiOjAsImlhdCI6MTU5OTA1MjY4NSwiZXhwIjoxNTk5MTM5MDg1fQ.ntLCyPCdqQZ-fpT9roFezTiz_feHJSSVThDcJCm3Oao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/product?page=2&limit=4&sort=product_name",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "4"
+								},
+								{
+									"key": "sort",
+									"value": "product_name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_PRODUCT_BY_ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2VtYWlsIjoiYXJpemFsaW5zaWRlQGdtYWlsLmNvbSIsInVzZXJfbmFtZSI6ImFyaXphbCIsInVzZXJfcm9sZSI6MiwidXNlcl9zdGF0dXMiOjAsImlhdCI6MTU5OTAzODQ4NiwiZXhwIjoxNTk5MTI0ODg2fQ.BaVleL0I61C2WJMJ-Jl8luLz3lrQSx27usu-WrnIOYY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/product/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"product",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_PRODUCT_BY_NAME",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3001/product/search?keyword=c",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"product",
+								"search"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "c"
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_PRODUCT",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product_name",
+									"value": "Lemon Tea",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "product_price",
+									"value": "12000",
+									"type": "text"
+								},
+								{
+									"key": "product_status",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "product_image",
+									"type": "file",
+									"src": "/C:/Users/ariza/Downloads/cat pict.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/product",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH_PRODUCT",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "product_name",
+									"value": "Wiener Schnitzel",
+									"type": "text"
+								},
+								{
+									"key": "product_price",
+									"value": "69000",
+									"type": "text"
+								},
+								{
+									"key": "product_image",
+									"type": "file",
+									"src": "/C:/Users/ariza/OneDrive/Documents/Arkademy/repositories/responsive-web/assets/image/fnb/wiener.png"
+								},
+								{
+									"key": "product_status",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/product/9",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"product",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE_PRODUCT",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/product/24",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"product",
+								"24"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "CATEGORY",
+			"item": [
+				{
+					"name": "GET_ALL_CATEGORY",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3001/category",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_CATEGORY_BY_ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2VtYWlsIjoiYXJpemFsaW5zaWRlQGdtYWlsLmNvbSIsInVzZXJfbmFtZSI6ImFyaXphbCIsInVzZXJfcm9sZSI6MiwidXNlcl9zdGF0dXMiOjAsImlhdCI6MTU5OTA1MjY4NSwiZXhwIjoxNTk5MTM5MDg1fQ.ntLCyPCdqQZ-fpT9roFezTiz_feHJSSVThDcJCm3Oao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3001/category/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"category",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_CATEGORY_BY_NAME",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3001/category/search?keyword=dri",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"category",
+								"search"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "dri"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_CATEGORY",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "category_name",
+									"value": "Permen",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/category",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH_CATEGORY",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "category_name",
+									"value": "Snack",
+									"type": "text"
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/category/5",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"category",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE_CATEGORY",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3001/category/5",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"category",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ORDER",
+			"item": [
+				{
+					"name": "GET_ALL_ORDER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3001/orders",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_ORDER_BY_ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3001/orders/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"orders",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_ORDER",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orders\": [\r\n        {\r\n            \"product_id\": 3,\r\n            \"order_qty\": 1\r\n        },\r\n        {\r\n            \"product_id\": 2,\r\n            \"order_qty\": 1\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/orders",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "HISTORY",
+			"item": [
+				{
+					"name": "GET_ALL_HISTORY",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orders\": [\r\n        {\r\n            \"product_id\": 1,\r\n            \"order_qty\": 2\r\n        },\r\n        {\r\n            \"product_id\": 2,\r\n            \"order_qty\": 4\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/history?page=2&limit=3&sort=history_id",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"history"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "3"
+								},
+								{
+									"key": "sort",
+									"value": "history_id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_HISTORY_BY_ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2VtYWlsIjoiYXJpemFsaW5zaWRlQGdtYWlsLmNvbSIsInVzZXJfbmFtZSI6ImFyaXphbCIsInVzZXJfcm9sZSI6MiwidXNlcl9zdGF0dXMiOjAsImlhdCI6MTU5OTA1MjY4NSwiZXhwIjoxNTk5MTM5MDg1fQ.ntLCyPCdqQZ-fpT9roFezTiz_feHJSSVThDcJCm3Oao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3001/history/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"history",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_HISTORY",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"orders\": [\r\n       {\r\n           \"product_id\": 2,\r\n           \"order_qty\": 2\r\n       }\r\n   ] \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/history",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH_HISTORY",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "AUTH",
+			"item": [
+				{
+					"name": "USER REGISTER",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "user_email",
+								"value": "arizalinside@gmail.com",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "user_password",
+								"value": "123456",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "user_name",
+								"value": "arizal",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_email",
+									"value": "arizal5@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "user_password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "user_name",
+									"value": "arizal5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/users/register",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"register"
+							],
+							"query": [
+								{
+									"key": "user_email",
+									"value": "arizal15@gmail.com",
+									"disabled": true
+								},
+								{
+									"key": "user_password",
+									"value": "123456",
+									"disabled": true
+								},
+								{
+									"key": "user_name",
+									"value": "arizal",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER LOGIN",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2VtYWlsIjoiYXJpemFsaW5zaWRlQGdtYWlsLmNvbSIsInVzZXJfbmFtZSI6ImFyaXphbCIsInVzZXJfcm9sZSI6MiwidXNlcl9zdGF0dXMiOjAsImlhdCI6MTU5ODk1Mzc0MiwiZXhwIjoxNTk4OTU3MzQyfQ.ckVb1XZOy1AOEH49O2arcTYhqEsZdPEbNWs-WDTOHzw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_email",
+									"value": "arizalinside@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "user_password",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3001/users/login",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2VtYWlsIjoiYXJpemFsaW5zaWRlQGdtYWlsLmNvbSIsInVzZXJfbmFtZSI6ImFyaXphbCIsInVzZXJfcm9sZSI6MiwidXNlcl9zdGF0dXMiOjAsImlhdCI6MTU5OTAzODQ4NiwiZXhwIjoxNTk5MTI0ODg2fQ.BaVleL0I61C2WJMJ-Jl8luLz3lrQSx27usu-WrnIOYY",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5ece95b3-1bf7-4996-95b5-bdac1b203319",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "0164eb0a-9326-44d2-a9e6-c466b1fd612d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
