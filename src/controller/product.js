@@ -9,6 +9,7 @@ const {
   deleteProduct,
 } = require("../model/product");
 const qs = require("querystring");
+const fs = require('fs')
 const helper = require("../helper/index");
 const redis = require('redis')
 const client = redis.createClient()
@@ -62,7 +63,11 @@ module.exports = {
     };
     try {
       const result = await getProduct(limit, offset, sort);
-      client.set(`getproduct:${JSON.stringify(request.query)}`, JSON.stringify(result))
+      const newResult = {
+        result,
+        pageInfo
+      }
+      client.setex(`getproduct:${JSON.stringify(request.query)}`, 3600, JSON.stringify(newResult))
       //proses set data result ke dalam redis
       return helper.response(
         response,
@@ -72,8 +77,8 @@ module.exports = {
         pageInfo
       );
     } catch (error) {
-      console.log(error);
-      // return helper.response(response, 400, "Bad Request", error)
+      // console.log(error);
+      return helper.response(response, 400, "Bad Request", error)
     }
   },
   getProductByName: async (request, response) => {
@@ -128,7 +133,6 @@ module.exports = {
   },
   postProduct: async (request, response) => {
     try {
-      console.log(request.file)
       const {
         category_id,
         product_name,
@@ -144,23 +148,23 @@ module.exports = {
         product_status,
       };
       // console.log(setData)
-      if (category_id === "") {
-        return helper.response(response, 400, "Category ID cannot be empty");
-      }
-      if (product_name === "") {
+      if (setData.category_id === "") {
+        return helper.response(response, 400, "Please select category");
+      } else if (setData.product_image === "") {
+        return helper.response(response, 400, "Please select image");
+      } else if (setData.product_name === "") {
         return helper.response(response, 400, "Product name cannot be empty");
-      }
-      if (product_price === "") {
+      } else if (setData.product_price === "") {
         return helper.response(response, 400, "Product price cannot be empty");
+      } else if (setData.product_status === "") {
+        return helper.response(response, 400, "Please select status");
+      } else {
+        const result = await postProduct(setData);
+        return helper.response(response, 201, "New product has been added", result);
       }
-      if (product_status === "") {
-        return helper.response(response, 400, "Product status cannot be empty");
-      }
-      const result = await postProduct(setData);
-      return helper.response(response, 201, "Product Created", result);
     } catch (error) {
-      console.log(error);
-      // return helper.response(response, 400, "Bad Request", error)
+      // console.log(error);
+      return helper.response(response, 400, "Bad Request", error)
     }
   },
   patchProduct: async (request, response) => {
@@ -198,8 +202,14 @@ module.exports = {
       }
       const checkId = await getProductById(id);
       if (checkId.length > 0) {
-        const result = await patchProduct(setData, id);
-        return helper.response(response, 201, "Product Updated", result);
+        fs.unlink(`./uploads/${checkId[0].product_image}`, async (error) => {
+          if (error) {
+            throw error;
+          } else {
+            const result = await patchProduct(setData, id);
+            return helper.response(response, 201, "Product Updated", result);
+          }
+        });
       } else {
         return helper.response(
           response,
@@ -214,8 +224,15 @@ module.exports = {
   deleteProduct: async (request, response) => {
     try {
       const { id } = request.params;
-      const result = await deleteProduct(id);
-      return helper.response(response, 201, "Product Deleted", result);
+      const checkId = await getProductById(id)
+      fs.unlink(`./uploads/${checkId[0].product_image}`, async (error) => {
+        if (error) {
+          throw error;
+        } else {
+          const result = await deleteProduct(id);
+          return helper.response(response, 201, "Product Deleted", result);
+        }
+      });
     } catch (error) {
       return helper.response(response, 400, "Bad Request", error);
     }
