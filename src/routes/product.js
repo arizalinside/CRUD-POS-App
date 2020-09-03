@@ -21,7 +21,20 @@ const storage = multer.diskStorage({
     )
   }
 })
-let upload = multer({ storage: storage })
+let upload = multer({
+  storage: storage,
+  fileFilter: (request, file, callback) => {
+    if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+      callback(null, true)
+    } else {
+      callback(null, false)
+      return callback(new Error('Only .png, .jpg and .jpeg format allowed!'));
+    }
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024
+  }
+})
 
 // [GET]
 router.get("/", authorization, getProductRedis, getProduct);
