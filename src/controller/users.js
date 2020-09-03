@@ -23,11 +23,17 @@ module.exports = {
             const checkEmailUser = await checkUser(user_email)
             if (checkEmailUser.length >= 1) {
                 return helper.response(response, 400, "Email has been registered")
-            } else if (request.body.user_password.length < 8) {
-                return helper.response(response, 400, "Password must have 8 characters minimum")
+            } else if (request.body.user_email === '') {
+                return helper.response(response, 400, "Email can't be empty")
+            } else if (request.body.user_email.search('@') < 1) {
+                return helper.response(response, 400, "Email not valid")
+            } else if (request.body.user_password.length < 8 || request.body.user_password.length > 16) {
+                return helper.response(response, 400, "Password must be 8 - 16 characters")
+            } else if (request.body.user_name === '') {
+                return helper.response(response, 400, "Username can't be empty")
             } else {
                 const result = await postUser(setData)
-                return helper.response(response, 200, "Success Register User", result)
+                return helper.response(response, 200, "Register Success", result)
             }
         } catch (error) {
             console.log(error)
@@ -53,14 +59,18 @@ module.exports = {
                         user_role,
                         user_status
                     }
-                    const token = jwt.sign(payload, "RAHASIA", { expiresIn: "24h" })
-                    payload = { ...payload, token }
-                    return helper.response(response, 200, "Success Login", payload)
+                    if (payload.user_status === 0) {
+                        return helper.response(response, 400, "Your account is not active. Please contact admin.")
+                    } else {
+                        const token = jwt.sign(payload, "RAHASIA", { expiresIn: "24h" })
+                        payload = { ...payload, token }
+                    }
+                    return helper.response(response, 200, "Login Success", payload)
                 } else {
                     return helper.response(response, 400, "Wrong Password!")
                 }
             } else {
-                return helper.response(response, 400, "Email / Account not registered!")
+                return helper.response(response, 400, "Email / Account is not registered!")
             }
         } catch (error) {
             return helper.response(response, 400, "Bad Request")
