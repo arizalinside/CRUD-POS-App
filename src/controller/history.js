@@ -67,7 +67,6 @@ module.exports = {
     };
     try {
       const result = await getAllHistory(limit, offset, sort);
-      client.set(`getallhistory:${JSON.stringify(request.query)}`, JSON.stringify(result))
       for (let i = 0; i < result.length; i++) {
         result[i].orders = await getOrderByHistoryId(result[i].history_id);
         let total = 0;
@@ -77,6 +76,11 @@ module.exports = {
         const tax = total * 0.1;
         result[i].tax = tax;
       }
+      const newResult = {
+        result,
+        pageInfo
+      }
+      client.setex(`getallhistory:${JSON.stringify(request.query)}`, 3600, JSON.stringify(newResult))
       return helper.response(
         response,
         201,
@@ -85,8 +89,8 @@ module.exports = {
         pageInfo
       );
     } catch (error) {
-      console.log(error);
-      // return helper.response(response, 404, 'Bad Request', error)
+      // console.log(error);
+      return helper.response(response, 404, 'Bad Request', error)
     }
   },
   getHistoryToday: async (request, response) => {
@@ -158,7 +162,7 @@ module.exports = {
         subtotal: dataHistory[0].history_subtotal,
         history_created_at: dataHistory[0].history_created_at,
       };
-      client.set(`gethistorybyid:${id}`, JSON.stringify(result))
+      client.setex(`gethistorybyid:${id}`, 3600, JSON.stringify(result))
       return helper.response(response, 201, `Success Get History`, result);
     } catch (error) {
       // console.log(error)

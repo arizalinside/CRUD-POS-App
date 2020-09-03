@@ -1,5 +1,6 @@
 const {
   getAllOrder,
+  getOrderCount,
   getOrderById,
   getOrderByHistoryId,
   postOrder,
@@ -10,16 +11,66 @@ const {
   patchHistory,
 } = require("../model/history");
 const { getProductById } = require("../model/product");
+const qs = require('qs')
 const helper = require("../helper/index");
 const redis = require('redis')
 const client = redis.createClient()
 
+const getPrevLink = (page, currentQuery) => {
+  if (page > 1) {
+    const generatedPage = {
+      page: page - 1,
+    };
+    const resultPrevLink = { ...currentQuery, ...generatedPage };
+    return qs.stringify(resultPrevLink);
+  } else {
+    return null;
+  }
+};
+
+const getNextLink = (page, totalPage, currentQuery) => {
+  if (page < totalPage) {
+    const generatedPage = {
+      page: page + 1,
+    };
+    const resultNextLink = { ...currentQuery, ...generatedPage };
+    return qs.stringify(resultNextLink);
+  } else {
+    return null;
+  }
+};
+
 module.exports = {
   getAllOrder: async (request, response) => {
+    let { page, limit, sort } = request.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+    // page === undefined || page === '' ? page = 1 : parseInt(page)
+    // limit === undefined || page === '' ? limit = 3 : parseInt(limit)
+    // if (sort === undefined || sort === '') {
+    //     sort = 'product_id'
+    // }
+    const totalData = await getOrderCount();
+    const totalPage = Math.ceil(totalData / limit);
+    const offset = page * limit - limit;
+    const prevLink = getPrevLink(page, request.query);
+    const nextLink = getNextLink(page, totalPage, request.query);
+    const pageInfo = {
+      page,
+      totalPage,
+      limit,
+      totalData,
+      prevLink: prevLink && `http://127.0.0.1:3001/orders?${prevLink}`,
+      nextLink: nextLink && `http://127.0.0.1:3001/orders?${nextLink}`,
+    };
     try {
-      const result = await getAllOrder();
-      client.set('getallorder', JSON.stringify(result))
-      return helper.response(response, 200, "Success Get Order", result);
+      const result = await getAllOrder(limit, offset, sort);
+      const newResult = {
+        result,
+        pageInfo
+      }
+      client.setex('getallorder', 3600, JSON.stringify(newResult))
+      return helper.response(response, 200, "Success Get Order", result, pageInfo);
     } catch (error) {
       return helper.response(response, 400, "Bad Request", error);
     }
@@ -28,19 +79,19 @@ module.exports = {
     try {
       const { id } = request.params;
       const result = await getOrderById(id);
-      client.set(`getorderbyid:${id}`, JSON.stringify(result))
       if (result.length > 0) {
+        client.setex(`getorderbyid:${id}`, 3600, JSON.stringify(result))
         return helper.response(
           response,
           200,
-          "Success Get Order By Id",
+          `Get Order ID: ${id}, Success!`,
           result
         );
       } else {
         return helper.response(
           responce,
           404,
-          `Product By Id : ${id} Not Found`,
+          `Order By ID: ${id} Not Found`,
           error
         );
       }

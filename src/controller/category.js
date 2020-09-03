@@ -1,14 +1,63 @@
-const { getAllCategory, getCategoryCountByName, getCategoryByName, getCategoryById, postCategory, patchCategory, deleteCategory } = require('../model/category')
+const { getAllCategory, getCategoryCount, getCategoryCountByName, getCategoryByName, getCategoryById, postCategory, patchCategory, deleteCategory } = require('../model/category')
 const helper = require('../helper/index')
 const redis = require('redis')
 const client = redis.createClient()
 
+const getPrevLink = (page, currentQuery) => {
+    if (page > 1) {
+        const generatedPage = {
+            page: page - 1,
+        };
+        const resultPrevLink = { ...currentQuery, ...generatedPage };
+        return qs.stringify(resultPrevLink);
+    } else {
+        return null;
+    }
+};
+
+const getNextLink = (page, totalPage, currentQuery) => {
+    if (page < totalPage) {
+        const generatedPage = {
+            page: page + 1,
+        };
+        const resultNextLink = { ...currentQuery, ...generatedPage };
+        return qs.stringify(resultNextLink);
+    } else {
+        return null;
+    }
+};
+
 module.exports = {
     getAllCategory: async (request, response) => {
+        let { page, limit, sort } = request.query;
+        page = parseInt(page);
+        limit = parseInt(limit);
+        // page === undefined || page === '' ? page = 1 : parseInt(page)
+        // limit === undefined || page === '' ? limit = 3 : parseInt(limit)
+        // if (sort === undefined || sort === '') {
+        //     sort = 'product_id'
+        // }
+        const totalData = await getCategoryCount();
+        const totalPage = Math.ceil(totalData / limit);
+        const offset = page * limit - limit;
+        const prevLink = getPrevLink(page, request.query);
+        const nextLink = getNextLink(page, totalPage, request.query);
+        const pageInfo = {
+            page,
+            totalPage,
+            limit,
+            totalData,
+            prevLink: prevLink && `http://127.0.0.1:3001/category?${prevLink}`,
+            nextLink: nextLink && `http://127.0.0.1:3001/category?${nextLink}`,
+        };
         try {
-            const result = await getAllCategory();
-            client.set('getallcategory', JSON.stringify(result))
-            return helper.response(response, 200, 'Success Get Category', result)
+            const result = await getAllCategory(limit, offset, sort);
+            const newResult = {
+                result,
+                pageInfo
+            }
+            client.setex('getallcategory', 3600, JSON.stringify(newResult))
+            return helper.response(response, 200, 'Success Get Category', result, pageInfo)
         } catch (error) {
             return helper.response(response, 404, 'Bad Request', error)
         }
@@ -22,8 +71,8 @@ module.exports = {
                 resultData,
                 searchResult,
             };
-            client.set(`getcategorybyname:${keyword}`, JSON.stringify(result))
             if (searchResult.length > 0) {
+                client.setex(`getcategorybyname:${keyword}`, 3600, JSON.stringify(result))
                 return helper.response(
                     response,
                     201,
@@ -43,8 +92,8 @@ module.exports = {
         try {
             const { id } = request.params
             const result = await getCategoryById(id);
-            client.set(`getcategorybyid:${id}`, JSON.stringify(result))
             if (result.length > 0) {
+                client.setex(`getcategorybyid:${id}`, 3600, JSON.stringify(result))
                 return helper.response(response, 200, 'Success Get Category By ID', result)
             } else {
                 return helper.response(response, 404, `Category By Id : ${id} Not Found`)
