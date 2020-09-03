@@ -9,7 +9,7 @@ module.exports = {
         client.get(`getproduct:${JSON.stringify(request.query)}`, (error, result) => {
             if (!error && result != null) {
                 console.log('data ada di dalam redis')
-                return helper.response(response, 200, JSON.parse(result))
+                return helper.response(response, 200, "Success Get Product", JSON.parse(result))
             } else {
                 console.log('data tidak ada di dalam redis')
                 next()
