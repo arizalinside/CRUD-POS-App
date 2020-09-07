@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 02, 2020 at 09:31 PM
+-- Generation Time: Sep 07, 2020 at 03:36 PM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.4.8
 
@@ -127,15 +127,18 @@ CREATE TABLE `product` (
 
 INSERT INTO `product` (`product_id`, `category_id`, `product_name`, `product_price`, `product_image`, `product_created_at`, `product_updated_at`, `product_status`) VALUES
 (1, 2, 'Espresso', 12000, '2020-09-02T18-31-40.982Z-espresso.png', '2020-08-11 03:29:32', '2020-09-02 18:31:41', 1),
-(2, 2, 'Coffe Latte', 15000, '2020-09-02T18-32-05.369Z-coffe-latte.png', '2020-08-11 03:00:00', '2020-09-02 18:32:05', 1),
 (3, 2, 'Cappucino', 10000, '2020-09-02T18-33-08.418Z-cappucino.png', '2020-08-11 16:33:59', '2020-09-02 18:33:08', 1),
 (4, 2, 'Red Velvet Latte', 33000, '2020-09-02T18-34-13.931Z-red-velvet.png', '2020-08-11 16:33:59', '2020-09-02 18:34:13', 1),
 (5, 3, 'Choco Rum', 28000, '2020-09-02T18-35-01.962Z-chocorum.png', '2020-08-11 16:33:59', '2020-09-02 18:35:01', 0),
 (6, 3, 'Black Forest', 30000, '2020-09-02T18-35-38.076Z-black-forest.png', '2020-08-11 16:33:59', '2020-09-02 18:35:38', 1),
 (7, 1, 'Chicken Katsu Dabu-dabu', 60000, '2020-09-02T18-36-49.954Z-chichken-katsu.png', '2020-08-11 16:33:59', '2020-09-02 18:36:49', 1),
 (8, 1, 'Salmon Truffle Teriyaki', 60000, '2020-09-02T18-37-22.272Z-salmon.png', '2020-08-11 16:33:59', '2020-09-02 18:37:22', 0),
-(9, 1, 'Wiener Schnitzel', 69000, '2020-09-02T18-37-44.396Z-wiener.png', '2020-08-11 16:33:59', '2020-09-02 18:37:44', 1),
-(28, 2, 'Lemon Tea', 12000, '2020-09-01T08-32-09.328Z-cat pict.png', '2020-09-01 08:32:09', '2020-09-01 08:32:09', 1);
+(9, 1, 'Wiener Schnitzel', 69000, '2020-09-07T02-38-34.652Z-jwt.png', '2020-08-11 16:33:59', '2020-09-07 02:38:34', 1),
+(28, 2, 'Lemon Tea', 12000, '2020-09-01T08-32-09.328Z-cat pict.png', '2020-09-01 08:32:09', '2020-09-01 08:32:09', 1),
+(29, 2, 'Thai Tea', 21000, '2020-09-03T17-15-33.508Z-Untitled-2-512.ico', '2020-09-03 17:15:33', '2020-09-03 17:15:33', 1),
+(30, 2, 'Thai Tea', 21000, '2020-09-03T17-18-37.572Z-Altay.phar', '2020-09-03 17:18:37', '2020-09-03 17:18:37', 1),
+(31, 2, 'Thai Tea', 21000, '2020-09-07T02-37-24.954Z-thai-tea.jpg', '2020-09-07 02:37:24', '2020-09-07 02:37:24', 1),
+(32, 2, 'Thai Tea', 21000, '2020-09-07T02-47-23.944Z-jwt2.png', '2020-09-07 02:47:23', '2020-09-07 02:47:24', 1);
 
 -- --------------------------------------------------------
 
@@ -159,10 +162,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `user_email`, `user_password`, `user_name`, `user_role`, `user_status`, `user_created_at`, `user_updated_at`) VALUES
-(2, 'arizalinside@gmail.com', '$2b$10$dQrvS.6lq3m58fsf8phME.9jYQ/aAFVZ72lkQpBUnCmyIMEDVfCuS', 'arizal', 2, 0, '2020-09-01 04:30:51', '2020-09-01 04:30:51'),
-(3, 'arizalinside@gmail.com', '$2b$10$O//v75Kv5iROkstRmPEAsO0LeZbIt/scn.PBn/YbHMJvjB7ScEnH.', 'arizal', 2, 0, '2020-09-02 09:22:15', '2020-09-02 09:22:15'),
-(4, 'arizalinc@gmail.com', '$2b$10$OyJ7My7RwPucqYXqe7UoHeqYfoEoWg4O8Smw7IXvBN3nWaunTmrxq', 'arizal', 2, 0, '2020-09-02 09:24:37', '2020-09-02 09:24:37'),
-(5, 'arizal5@gmail.com', '$2b$10$8WchS7n0ScVuD/OlKXRrN.zbty.J5DRgVCYMwwTEuLlaKE5H.Auli', 'arizal5', 2, 0, '2020-09-02 10:43:49', '2020-09-02 10:43:49');
+(8, 'arizalinside@gmail.com', '$2b$10$fv8dd2OAlgfpqsRKL07YEO47NI//.jsi8rA9Y8JY5XgLeCNXGGZrC', 'arizal', 1, 1, '2020-09-03 17:10:12', '2020-09-03 17:10:12'),
+(9, 'arizalinsidee@gmail.com', '$2b$10$8Uu/42X19SeN22A48ideveEqUsbRyRWp32BJoevKakVrHMiN.roxy', 'arizal', 2, 0, '2020-09-07 02:28:13', '2020-09-07 02:28:13');
 
 --
 -- Indexes for dumped tables
@@ -224,13 +225,13 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
