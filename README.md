@@ -31,26 +31,85 @@ Open .env file on your favorite code editor, and copy paste this code below :
 
 ```
 DB_HOST=localhost // Database host
+DB_PASS=          // Database password
+DB_USER=root      // Database user
+DB_NAME=pos_app   // Database name
 ```
 
 ## End Point
 
 **1. GET**
 
-- `/product`(Get all product)
+- `/product` (Get all product)
+
+  - `{ "page": 1, "limit": 3, "sort" : "product_name DESC" }`
+
+- `/product/search` (Get product by name)
+
+  - `{ "keyword": "coffee" }`
+
+- `/product/:id` (Get product by id)
+
+- `/category` (Get all category)
+
+- `/category/search` (Get category by name)
+
+  - `{ "keyword": "drink" }`
+
+- `/category/:id` (Get category by id)
+
+- `/orders` (Get all order)
+
+  - `{ "page": 1, "limit": 3, "sort" : "order_id ASC" }`
+
+- `/orders/:id` (Get order by id)
+
+- `/history` (Get all history)
+
+  - `{ "page": 1, "limit": 3, "sort" : "history_created_at ASC" }`
+
+- `/history/:id` (Get history by id)
+
+- `/users` (Get all user)
 
 **2. POST**
 
 - `/product` (Post product)
-  - `{ "product_name": "Kipas", "category_id": 2, "product_harga": 50000 , "product_status" : 1 | 0}`
+
+  - `{ "product_name": "Milk Tea", "category_id": 1, "product_harga": 24000 , "product_status" : 1 | 0}`
+
+- `/category` (Post category)
+
+  - `{ "category_name": "Snack" }`
+
+- `/order` (Post order)
+
+  - `{ "orders": [{ "product_id": 1, "qty": 2 }, { "product_id": 7, "qty": 2 }] }`
+
+- `/users/register` (Post User Register)
+
+  - `{ "user_email": "arizal123@gmail.com", "user_password": "12345678", "user_name": "arizal123" }`
+
+- `/users/login` (Post User Login)
+  - `{ "user_email": "arizal123@gmail.com", "user_password": "12345678" }`
 
 **3. PATCH**
 
 - `/product/:id` (Update product by id)
 
-  - `{"product_name" : "Mouse", "category_id" : 1, "product_harga" : 100000, "product_status" : 1 | 0}`
+  - `{"product_name" : "Lemon Tea", "category_id" : 2, "product_harga" : 12000, "product_status" : 1 | 0}`
+
+- `/category/:id` (Update category by id)
+
+  - `{ "category_name": "Noodles" }`
+
+- `/users/:id` (Update user by id)
+  - `{ "user_name": "arizal321", "user_role": 1 | 2, "user_status": 0 | 1 }`
 
 **4. DELETE**
 
 - `/product/:id` (Delete product by id)
+
+- `/category/:id` (Delete category by id)
+
 # week6-web3-intermediate_backend
