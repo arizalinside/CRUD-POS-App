@@ -9,10 +9,10 @@ const {
   deleteProduct,
 } = require("../model/product");
 const qs = require("querystring");
-const fs = require('fs')
+const fs = require("fs");
 const helper = require("../helper/index");
-const redis = require('redis')
-const client = redis.createClient()
+const redis = require("redis");
+const client = redis.createClient();
 
 const getPrevLink = (page, currentQuery) => {
   if (page > 1) {
@@ -43,11 +43,7 @@ module.exports = {
     let { page, limit, sort } = request.query;
     page = parseInt(page);
     limit = parseInt(limit);
-    // page === undefined || page === '' ? page = 1 : parseInt(page)
-    // limit === undefined || page === '' ? limit = 3 : parseInt(limit)
-    // if (sort === undefined || sort === '') {
-    //     sort = 'product_id'
-    // }
+
     const totalData = await getProductCount();
     const totalPage = Math.ceil(totalData / limit);
     const offset = page * limit - limit;
@@ -65,10 +61,13 @@ module.exports = {
       const result = await getProduct(limit, offset, sort);
       const newResult = {
         result,
-        pageInfo
-      }
-      client.setex(`getproduct:${JSON.stringify(request.query)}`, 3600, JSON.stringify(newResult))
-      //proses set data result ke dalam redis
+        pageInfo,
+      };
+      client.setex(
+        `getproduct:${JSON.stringify(request.query)}`,
+        3600,
+        JSON.stringify(newResult)
+      );
       return helper.response(
         response,
         200,
@@ -77,8 +76,7 @@ module.exports = {
         pageInfo
       );
     } catch (error) {
-      // console.log(error);
-      return helper.response(response, 400, "Bad Request", error)
+      return helper.response(response, 400, "Bad Request", error);
     }
   },
   getProductByName: async (request, response) => {
@@ -90,7 +88,7 @@ module.exports = {
         resultData,
         searchResult,
       };
-      client.set(`getproductbyname:${keyword}`, JSON.stringify(result))
+      client.set(`getproductbyname:${keyword}`, JSON.stringify(result));
       if (searchResult.length > 0) {
         return helper.response(
           response,
@@ -101,19 +99,21 @@ module.exports = {
       } else {
         return helper.response(response, 404, `Product Not Found`, result);
       }
-      // console.log(result)
     } catch (error) {
-      //   return helper.response(response, 400, "Bad Request", error);
-      console.log(error);
+      return helper.response(response, 400, "Bad Request", error);
     }
   },
   getProductById: async (request, response) => {
     try {
-      // const id = request.params.id
       const { id } = request.params;
       const result = await getProductById(id);
-      client.setex(`getproductbyid:${id}`, 3600, JSON.stringify(result))
       if (result.length > 0) {
+        client.setex(
+          `getproductbyid:${id}`,
+          3600,
+          `Success Get Product By ID: ${id}`,
+          JSON.stringify(result)
+        );
         return helper.response(
           response,
           200,
@@ -147,7 +147,6 @@ module.exports = {
         product_created_at: new Date(),
         product_status,
       };
-      // console.log(setData)
       if (setData.category_id === "") {
         return helper.response(response, 400, "Please select category");
       } else if (setData.product_image === "") {
@@ -160,11 +159,15 @@ module.exports = {
         return helper.response(response, 400, "Please select status");
       } else {
         const result = await postProduct(setData);
-        return helper.response(response, 201, "New product has been added", result);
+        return helper.response(
+          response,
+          201,
+          "New product has been added",
+          result
+        );
       }
     } catch (error) {
-      // console.log(error);
-      return helper.response(response, 400, "Bad Request", error)
+      return helper.response(response, 400, "Bad Request", error);
     }
   },
   patchProduct: async (request, response) => {
@@ -224,7 +227,7 @@ module.exports = {
   deleteProduct: async (request, response) => {
     try {
       const { id } = request.params;
-      const checkId = await getProductById(id)
+      const checkId = await getProductById(id);
       fs.unlink(`./uploads/${checkId[0].product_image}`, async (error) => {
         if (error) {
           throw error;

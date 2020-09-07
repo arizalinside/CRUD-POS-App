@@ -32,11 +32,6 @@ module.exports = {
         let { page, limit, sort } = request.query;
         page = parseInt(page);
         limit = parseInt(limit);
-        // page === undefined || page === '' ? page = 1 : parseInt(page)
-        // limit === undefined || page === '' ? limit = 3 : parseInt(limit)
-        // if (sort === undefined || sort === '') {
-        //     sort = 'product_id'
-        // }
         const totalData = await getCategoryCount();
         const totalPage = Math.ceil(totalData / limit);
         const offset = page * limit - limit;
@@ -56,7 +51,7 @@ module.exports = {
                 result,
                 pageInfo
             }
-            client.setex('getallcategory', 3600, JSON.stringify(newResult))
+            client.set('getallcategory', JSON.stringify(newResult))
             return helper.response(response, 200, 'Success Get Category', result, pageInfo)
         } catch (error) {
             return helper.response(response, 404, 'Bad Request', error)
@@ -82,9 +77,7 @@ module.exports = {
             } else {
                 return helper.response(response, 404, `Product Not Found`, result);
             }
-            // console.log(result)
         } catch (error) {
-            //   return helper.response(response, 400, "Bad Request", error);
             console.log(error);
         }
     },
@@ -99,7 +92,6 @@ module.exports = {
                 return helper.response(response, 404, `Category By Id : ${id} Not Found`)
             }
         } catch (error) {
-            // console.log(error)
             return helper.response(response, 400, 'Bad Request', error)
         }
     },

@@ -45,11 +45,7 @@ module.exports = {
     let { page, limit, sort } = request.query;
     page = parseInt(page);
     limit = parseInt(limit);
-    // page === undefined || page === '' ? page = 1 : parseInt(page)
-    // limit === undefined || page === '' ? limit = 3 : parseInt(limit)
-    // if (sort === undefined || sort === '') {
-    //     sort = 'product_id'
-    // }
+
     const totalData = await getOrderCount();
     const totalPage = Math.ceil(totalData / limit);
     const offset = page * limit - limit;
@@ -149,7 +145,6 @@ module.exports = {
       };
       return helper.response(response, 201, "Order Created", checkout);
     } catch (error) {
-      // console.log(error)
       return helper.response(response, 400, "Bad Request", error);
     }
   },

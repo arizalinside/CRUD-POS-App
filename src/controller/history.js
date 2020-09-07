@@ -45,11 +45,6 @@ module.exports = {
     let { page, limit, sort } = request.query;
     page = parseInt(page);
     limit = parseInt(limit);
-    // page === undefined ? page = 1 : page = parseInt(page)
-    // limit === undefined ? limit = 3 : limit = parseInt(limit)
-    // if (sort === undefined) {
-    //     sort = 'history_id'
-    // }
 
     const totalData = await getHistoryCount();
     const totalPage = Math.ceil(totalData / limit);
@@ -89,7 +84,6 @@ module.exports = {
         pageInfo
       );
     } catch (error) {
-      // console.log(error);
       return helper.response(response, 404, 'Bad Request', error)
     }
   },
@@ -165,7 +159,6 @@ module.exports = {
       client.setex(`gethistorybyid:${id}`, 3600, JSON.stringify(result))
       return helper.response(response, 201, `Success Get History`, result);
     } catch (error) {
-      // console.log(error)
       return helper.response(response, 404, "Bad Request", error);
     }
   },
