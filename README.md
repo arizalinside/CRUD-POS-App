@@ -33,7 +33,7 @@ Open .env file on your favorite code editor, and copy paste this code below :
 DB_HOST=localhost // Database host
 DB_PASS=          // Database password
 DB_USER=root      // Database user
-DB_NAME=pos_app   // Database name
+DB_NAME=online_shop   // Database name
 ```
 
 ## End Point
