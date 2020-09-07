@@ -10,10 +10,12 @@ const {
   getCountHistoryWeek,
   getHistoryById,
 } = require("../controller/history");
-const { authorization } = require('../middleware/auth')
-const { getAllHistoryRedis, getHistoryByIdRedis } = require('../middleware/redis')
+const { authorization } = require("../middleware/auth");
+const {
+  getAllHistoryRedis,
+  getHistoryByIdRedis,
+} = require("../middleware/redis");
 
-// [GET]
 router.get("/", authorization, getAllHistoryRedis, getAllHistory);
 router.get("/chart", getSumChart);
 router.get("/today", getHistoryToday);
