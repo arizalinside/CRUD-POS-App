@@ -68,6 +68,7 @@ module.exports = {
         3600,
         JSON.stringify(newResult)
       );
+      // console.log(newResult);
       return helper.response(
         response,
         200,
@@ -147,16 +148,16 @@ module.exports = {
         product_created_at: new Date(),
         product_status,
       };
-      if (setData.category_id === "") {
-        return helper.response(response, 400, "Please select category");
-      } else if (setData.product_image === "") {
-        return helper.response(response, 400, "Please select image");
-      } else if (setData.product_name === "") {
+      if (setData.product_name === "") {
         return helper.response(response, 400, "Product name cannot be empty");
       } else if (setData.product_price === "") {
         return helper.response(response, 400, "Product price cannot be empty");
+      } else if (setData.category_id === "") {
+        return helper.response(response, 400, "Please select category");
       } else if (setData.product_status === "") {
         return helper.response(response, 400, "Please select status");
+      } else if (setData.product_image === "") {
+        return helper.response(response, 400, "Please select image");
       } else {
         const result = await postProduct(setData);
         return helper.response(
@@ -167,7 +168,8 @@ module.exports = {
         );
       }
     } catch (error) {
-      return helper.response(response, 400, "Bad Request", error);
+      console.log(error);
+      // return helper.response(response, 400, "Bad Request", error);
     }
   },
   patchProduct: async (request, response) => {
@@ -180,11 +182,11 @@ module.exports = {
         product_image,
         product_status,
       } = request.body;
+      const productImage = request.file
       const setData = {
         category_id,
         product_name,
         product_price,
-        product_image: request.file === undefined ? "" : request.file.filename,
         product_updated_at: new Date(),
         product_status,
       };
@@ -204,15 +206,24 @@ module.exports = {
         return helper.response(response, 400, "Product status cannot be empty");
       }
       const checkId = await getProductById(id);
+      // console.log(checkId);
       if (checkId.length > 0) {
-        fs.unlink(`./uploads/${checkId[0].product_image}`, async (error) => {
-          if (error) {
-            throw error;
-          } else {
-            const result = await patchProduct(setData, id);
-            return helper.response(response, 201, "Product Updated", result);
+        if (productImage === "" || productImage === undefined) {
+          setData = setData;
+        } else {
+          setData.product_image = productImage.filename
+          if (checkId[0].product_image !== "" || checkId[0].product_image !== null) {
+            fs.unlink(`./uploads/${checkId[0].product_image}`, async (error) => {
+              if (error) {
+                console.log(error);
+                // throw error;
+              } else {
+                const result = await patchProduct(setData, id);
+                return helper.response(response, 201, "Product Updated", result);
+              }
+            })
           }
-        });
+        }
       } else {
         return helper.response(
           response,
