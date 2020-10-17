@@ -29,32 +29,33 @@ const getNextLink = (page, totalPage, currentQuery) => {
 
 module.exports = {
     getAllCategory: async (request, response) => {
-        let { page, limit, sort } = request.query;
-        page = parseInt(page);
-        limit = parseInt(limit);
-        const totalData = await getCategoryCount();
-        const totalPage = Math.ceil(totalData / limit);
-        const offset = page * limit - limit;
-        const prevLink = getPrevLink(page, request.query);
-        const nextLink = getNextLink(page, totalPage, request.query);
-        const pageInfo = {
-            page,
-            totalPage,
-            limit,
-            totalData,
-            prevLink: prevLink && `http://127.0.0.1:3001/category?${prevLink}`,
-            nextLink: nextLink && `http://127.0.0.1:3001/category?${nextLink}`,
-        };
+        // let { page, limit, sort } = request.query;
+        // page = parseInt(page);
+        // limit = parseInt(limit);
+        // const totalData = await getCategoryCount();
+        // const totalPage = Math.ceil(totalData / limit);
+        // const offset = page * limit - limit;
+        // const prevLink = getPrevLink(page, request.query);
+        // const nextLink = getNextLink(page, totalPage, request.query);
+        // const pageInfo = {
+        //     page,
+        //     totalPage,
+        //     limit,
+        //     totalData,
+        //     prevLink: prevLink && `http://127.0.0.1:3001/category?${prevLink}`,
+        //     nextLink: nextLink && `http://127.0.0.1:3001/category?${nextLink}`,
+        // };
         try {
-            const result = await getAllCategory(limit, offset, sort);
-            const newResult = {
-                result,
-                pageInfo
-            }
-            client.set('getallcategory', JSON.stringify(newResult))
-            return helper.response(response, 200, 'Success Get Category', result, pageInfo)
+            const result = await getAllCategory();
+            // console.log(result);
+            // const newResult = {
+            //     result,
+            //     pageInfo
+            // }
+            client.set('getallcategory', JSON.stringify(result))
+            return helper.response(response, 200, 'Success Get Category', result)
         } catch (error) {
-            return helper.response(response, 404, 'Bad Request', error)
+            return helper.response(response, 400, 'Bad Request', error)
         }
     },
     getCategroyByName: async (request, response) => {

@@ -96,6 +96,7 @@ module.exports = {
     }
   },
   postOrder: async (request, response) => {
+    // console.log(request.body);
     try {
       const setData = {
         history_invoices: Math.floor(100000 + Math.random() * 900000),
@@ -103,14 +104,19 @@ module.exports = {
         history_created_at: new Date(),
       };
       const result = await postHistory(setData);
+      // console.log(result);
       const historyId = result.history_id;
-      const dataOrder = request.body.orders;
+      let dataOrder = request.body.orders;
       let subtotal = 0;
       for (let i = 0; i < dataOrder.length; i++) {
         const productId = dataOrder[i].product_id;
+        // console.log(productId);
         const orderQty = dataOrder[i].order_qty;
+        // console.log(orderQty);
         const getProductId = await getProductById(productId);
+        // console.log(getProductId);
         const dataProduct = getProductId[0];
+        // console.log(dataProduct);
         const productPrice = dataProduct.product_price;
         const setData2 = {
           history_id: historyId,
@@ -119,16 +125,22 @@ module.exports = {
           order_subtotal: orderQty * productPrice,
         };
         const result2 = await postOrder(setData2);
+        // console.log(result2);
         subtotal += result2.order_subtotal;
+        // console.log(subtotal);
       }
       const tax = subtotal * 0.1;
+      // console.log(tax);
       const totalPrice = subtotal + tax;
+      // console.log(totalPrice);
       const setData3 = {
         history_subtotal: totalPrice,
       };
       await patchHistory(setData3, historyId);
       const dataHistory = await getHistoryById(historyId);
+      // console.log(dataHistory);
       const dataOrderByHistory = await getOrderByHistoryId(historyId);
+      // console.log(dataOrderByHistory);
       const {
         history_id,
         history_invoices,
@@ -145,7 +157,8 @@ module.exports = {
       };
       return helper.response(response, 201, "Order Created", checkout);
     } catch (error) {
-      return helper.response(response, 400, "Bad Request", error);
+      console.log(error);
+      // return helper.response(response, 400, "Bad Request", error);
     }
   },
 };

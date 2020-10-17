@@ -8,13 +8,13 @@ const {
   getTotalIncome,
   getTotalIncomeYear,
   getCountHistoryWeek,
-  getHistoryCount
+  getHistoryCount,
 } = require("../model/history");
 const { getOrderByHistoryId } = require("../model/order");
 const qs = require("querystring");
 const helper = require("../helper/index");
-const redis = require('redis')
-const client = redis.createClient()
+const redis = require("redis");
+const client = redis.createClient();
 
 const getPrevLink = (page, currentQuery) => {
   if (page > 1) {
@@ -62,60 +62,73 @@ module.exports = {
     };
     try {
       const result = await getAllHistory(limit, offset, sort);
-      for (let i = 0; i < result.length; i++) {
-        result[i].orders = await getOrderByHistoryId(result[i].history_id);
-        let total = 0;
-        result[i].orders.forEach((value) => {
-          total += value.order_subtotal;
-        });
-        const tax = total * 0.1;
-        result[i].tax = tax;
-      }
-      const newResult = {
-        result,
-        pageInfo
-      }
-      client.setex(`getallhistory:${JSON.stringify(request.query)}`, 3600, JSON.stringify(newResult))
-      return helper.response(
-        response,
-        201,
-        "Success Get History",
-        result,
-        pageInfo
-      );
+      console.log(result);
+      // for (let i = 0; i < result.length; i++) {
+      //   result[i].orders = await getOrderByHistoryId(result[i].history_id);
+      //   let total = 0;
+      //   result[i].orders.forEach((value) => {
+      //     total += value.order_subtotal;
+      //   });
+      //   const tax = total * 0.1;
+      //   result[i].tax = tax;
+      // }
+      // const newResult = {
+      //   result,
+      //   pageInfo
+      // }
+      // client.setex(`getallhistory:${JSON.stringify(request.query)}`, 3600, JSON.stringify(newResult))
+      // return helper.response(
+      //   response,
+      //   201,
+      //   "Success Get History",
+      //   result,
+      //   pageInfo
+      // );
     } catch (error) {
-      return helper.response(response, 404, 'Bad Request', error)
+      return helper.response(response, 404, "Bad Request", error);
     }
   },
   getHistoryToday: async (request, response) => {
     try {
       const result = await getHistoryToday();
+      // console.log(result);
       for (let i = 0; i < result.length; i++) {
         result[i].orders = await getOrderByHistoryId(result[i].history_id);
+        // console.log(result[i].orders);
         let total = 0;
         result[i].orders.forEach((value) => {
-          total += value.order_total_price;
+          // console.log(value);
+          total += value.order_subtotal;
         });
         const tax = (total * 10) / 100;
         result[i].tax = tax;
+        // console.log(result[i].tax);
       }
+      // console.log(result);
+      // }
       return helper.response(response, 201, "Success Get History", result);
     } catch (error) {
+      // console.log(error);
       return helper.response(response, 404, "Bad Request", error);
     }
   },
   getHistoryWeek: async (request, response) => {
     try {
       const result = await getHistoryWeek();
+      // console.log(result);
       for (let i = 0; i < result.length; i++) {
         result[i].orders = await getOrderByHistoryId(result[i].history_id);
+        // console.log(result[i].orders);
         let total = 0;
         result[i].orders.forEach((value) => {
-          total += value.order_total_price;
+          total += value.order_subtotal;
+          // console.log(total);
         });
         const tax = (total * 10) / 100;
         result[i].tax = tax;
+        // console.log(result[i].tax);
       }
+      // console.log(result);
       return helper.response(response, 201, "Success Get History", result);
     } catch (error) {
       return helper.response(response, 404, "Bad Request", error);
@@ -128,7 +141,7 @@ module.exports = {
         result[i].orders = await getOrderByHistoryId(result[i].history_id);
         let total = 0;
         result[i].orders.forEach((value) => {
-          total += value.order_total_price;
+          total += value.order_subtotal;
         });
         const tax = (total * 10) / 100;
         result[i].tax = tax;
@@ -156,7 +169,7 @@ module.exports = {
         subtotal: dataHistory[0].history_subtotal,
         history_created_at: dataHistory[0].history_created_at,
       };
-      client.setex(`gethistorybyid:${id}`, 3600, JSON.stringify(result))
+      client.setex(`gethistorybyid:${id}`, 3600, JSON.stringify(result));
       return helper.response(response, 201, `Success Get History`, result);
     } catch (error) {
       return helper.response(response, 404, "Bad Request", error);
@@ -179,6 +192,7 @@ module.exports = {
     try {
       const { date } = request.query;
       const result = await getTotalIncome(date);
+      // console.log(result);
       return helper.response(
         response,
         200,
@@ -191,8 +205,8 @@ module.exports = {
   },
   getTotalIncomeYear: async (request, response) => {
     try {
-      const { date } = request.query;
-      const result = await getTotalIncomeYear(date);
+      // const { date } = request.query;
+      const result = await getTotalIncomeYear();
       return helper.response(
         response,
         200,
@@ -205,8 +219,8 @@ module.exports = {
   },
   getCountHistoryWeek: async (request, response) => {
     try {
-      const { date } = request.query;
-      const result = await getCountHistoryWeek(date);
+      // const { date } = request.query;
+      const result = await getCountHistoryWeek();
       return helper.response(
         response,
         200,
