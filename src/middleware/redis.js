@@ -4,17 +4,19 @@ const helper = require("../helper/index");
 
 module.exports = {
   getProductRedis: (request, response, next) => {
-    let { page, limit, sort } = request.query;
     client.get(
       `getproduct:${JSON.stringify(request.query)}`,
       (error, result) => {
         if (!error && result != null) {
           console.log("data ada di dalam redis");
+          const setData = JSON.parse(result)
+          // console.log(setData);
           return helper.response(
             response,
             200,
             "Success Get Product",
-            JSON.parse(result)
+            setData.result,
+            setData.pageInfo
           );
         } else {
           console.log("data tidak ada di dalam redis");
@@ -62,11 +64,13 @@ module.exports = {
     client.get("getallcategory", (error, result) => {
       if (!error && result != null) {
         console.log("data ada di dalam redis");
+        const setData = JSON.parse(result)
+        // console.log(setData);
         return helper.response(
           response,
           200,
           "Get All Category Success!",
-          JSON.parse(result)
+          setData
         );
       } else {
         console.log("data tidak ada di dalam redis");
