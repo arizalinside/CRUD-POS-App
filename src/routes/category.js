@@ -18,7 +18,7 @@ const { authorization } = require("../middleware/auth");
 router.get("/", authorization, getAllCategoryRedis, getAllCategory);
 router.get("/search", authorization, getCategoryByNameRedis, getCategroyByName);
 router.get("/:id", authorization, getCategoryByIdRedis, getCategoryById);
-router.post("/", authorization, postCategory);
+router.post("/", authorization, clearDataCategoryRedis, postCategory);
 router.patch("/:id", authorization, clearDataCategoryRedis, patchCategory);
 router.delete("/:id", authorization, clearDataCategoryRedis, deleteCategory);
 
