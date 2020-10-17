@@ -48,7 +48,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       connection.query(
         `
-            SELECT product.product_id, category.category_name, product.product_name, product.product_price, product.product_created_at, product_updated_at 
+            SELECT product.product_id, category.category_name, product.product_name, product.product_image, product.product_price, product.product_created_at, product_updated_at 
             FROM product 
             INNER JOIN category ON product.category_id = category.category_id 
             WHERE product.product_name LIKE ?`,
@@ -70,9 +70,11 @@ module.exports = {
               product_id: result.insertId,
               ...setData,
             };
+            // console.log(newResult)
             resolve(newResult);
           } else {
-            reject(new Error(error));
+            console.log(error);
+            // reject(new Error(error));
           }
         }
       );
