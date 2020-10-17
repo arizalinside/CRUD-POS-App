@@ -73,6 +73,7 @@ module.exports = {
       WHERE MONTH(history_created_at) = MONTH('${date}') AND YEAR(history_created_at) = YEAR('${date}') 
       GROUP BY DATE(history_created_at)`,
         (error, result) => {
+          // console.log(result);
           !error ? resolve(result) : reject(new Error(error));
         }
       );
@@ -85,29 +86,68 @@ module.exports = {
       LIKE ?`,
         `%${date}%`,
         (error, result) => {
+          // console.log(result[0].total_income);
           !error ? resolve(result[0].total_income) : reject(new Error(error));
         }
       );
     });
   },
-  getTotalIncomeYear: (date) => {
+  getTotalIncomeYear: () => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT SUM(history_subtotal) AS income FROM history
-      WHERE YEAR(history_created_at) = YEAR('${date}') GROUP BY YEAR('${date}')`,
+        "SELECT SUM(history_subtotal) as Years FROM history WHERE YEAR(history_created_at) = YEAR(NOW())",
         (error, result) => {
-          !error ? resolve(result[0].income) : reject(new Error(error));
+          // console.log(result[0].Years);
+          !error ? resolve(result[0].Years) : reject(new Error(error));
         }
       );
     });
   },
-  getCountHistoryWeek: (date) => {
+  getCountHistoryWeek: () => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT COUNT(*) AS orders FROM history WHERE YEARWEEK(history_created_at) = YEARWEEK('${date}')
-      GROUP BY YEARWEEK('${date}')`,
+        "SELECT COUNT(*) as orders FROM history WHERE YEARWEEK(history_created_at) = YEARWEEK(NOW())",
         (error, result) => {
+          console.log(result);
           !error ? resolve(result[0].orders) : reject(new Error(error));
+        }
+      );
+    });
+  },
+  postHistory: (setData) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "INSERT INTO history SET ?",
+        setData,
+        (error, result) => {
+          if (!error) {
+            const newResult = {
+              history_id: result.insertId,
+              ...setData,
+            };
+            resolve(newResult);
+          } else {
+            reject(new Error(error));
+          }
+        }
+      );
+    });
+  },
+  patchHistory: (setData, id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "UPDATE history SET ? WHERE history_id = ?",
+        [setData, id],
+        (error, result) => {
+          if (!error) {
+            const newResult = {
+              history_id: id,
+              ...setData,
+            };
+            resolve(newResult);
+          } else {
+            reject(new Error(error));
+          }
         }
       );
     });
