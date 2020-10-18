@@ -19,7 +19,7 @@ const upload = require("../middleware/multer");
 router.get("/", authorization, getProductRedis, getProduct);
 router.get("/search", authorization, getProductByNameRedis, getProductByName);
 router.get("/:id", authorization, getProductByIdRedis, getProductById);
-router.post("/", authorization, upload, postProduct);
+router.post("/", authorization, upload, clearDataProductRedis, postProduct);
 router.patch(
   "/:id",
   authorization,
