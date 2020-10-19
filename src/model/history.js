@@ -79,15 +79,13 @@ module.exports = {
       );
     });
   },
-  getTotalIncome: (date) => {
+  getTotalIncome: () => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT SUM(history_subtotal) AS total_income FROM history WHERE history_created_at 
-      LIKE ?`,
-        `%${date}%`,
+        `SELECT SUM(history_subtotal) as day FROM history WHERE DAY(history_created_at) = DAY(NOW())`,
         (error, result) => {
           // console.log(result[0].total_income);
-          !error ? resolve(result[0].total_income) : reject(new Error(error));
+          !error ? resolve(result[0].day) : reject(new Error(error));
         }
       );
     });
@@ -95,10 +93,10 @@ module.exports = {
   getTotalIncomeYear: () => {
     return new Promise((resolve, reject) => {
       connection.query(
-        "SELECT SUM(history_subtotal) as Years FROM history WHERE YEAR(history_created_at) = YEAR(NOW())",
+        "SELECT SUM(history_subtotal) as years FROM history WHERE YEAR(history_created_at) = YEAR(NOW())",
         (error, result) => {
           // console.log(result[0].Years);
-          !error ? resolve(result[0].Years) : reject(new Error(error));
+          !error ? resolve(result[0].years) : reject(new Error(error));
         }
       );
     });

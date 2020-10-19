@@ -190,13 +190,11 @@ module.exports = {
   },
   getTotalIncome: async (request, response) => {
     try {
-      const { date } = request.query;
-      const result = await getTotalIncome(date);
-      // console.log(result);
+      const result = await getTotalIncome();
       return helper.response(
         response,
         200,
-        `Get total income ${date} Success`,
+        `Get today income Success`,
         result
       );
     } catch (error) {
