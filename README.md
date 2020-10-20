@@ -20,7 +20,7 @@ Michi is application point of sale for cashier. Michi app simplify the process o
 2. Type `npm install`
 3. Make new file a called **.env**, set up first [here](#set-up-env-file)
 4. Turn on Web Server and MySQL can using Third-party tool like xampp, etc.
-5. Create a database with the name #nama_database, and Import file sql to **phpmyadmin**
+5. Create a database with the name #database_name, and Import file sql to **phpmyadmin**
 6. Open Postman desktop application or Chrome web app extension that has installed before
 7. Choose HTTP Method and enter request url.(ex. localhost:3000/)
 8. You can see all the end point [here](#end-point)
