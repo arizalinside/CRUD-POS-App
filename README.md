@@ -111,5 +111,3 @@ DB_NAME=online_shop   // Database name
 - `/product/:id` (Delete product by id)
 
 - `/category/:id` (Delete category by id)
-
-# week6-web3-intermediate_backend
